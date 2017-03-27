@@ -1,0 +1,2 @@
+Drivers for jargon to go here. In this context, a driver will be the program that feeds input to jargon.
+It may take the form of a simple prompt for text input, listening for speech through a microphone, etc.
