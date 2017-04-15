@@ -19,25 +19,13 @@ def get_output(out_queue):
 
 def process_main():
     done = False
-    #out_queue = Queue()
-    #err_queue = Queue()
-
-    #out_thread = Thread(target = enqueue_output, args = (prolog.stdout, out_queue))
-    #err_thread = Thread(target = enqueue_output, args = (prolog.stderr, out_queue))
-
-    #out_thread.daemon = True
-    #err_thread.daemon = True
-
-    #out_thread.start()
-    #err_thread.start()
-
     i = 0
 
-    # TODO: this seems to work, just need to set up initial goals
+    goal_file = "prolog/test_kb.pl"
 
     while not done:
-        prolog = subprocess.Popen("swipl", stdin = subprocess.PIPE, stdout = subprocess.PIPE,
-            stderr = subprocess.PIPE, shell = True, universal_newlines = True)
+        prolog = subprocess.Popen(["swipl", goal_file], stdin = subprocess.PIPE, stdout = subprocess.PIPE,
+            stderr = subprocess.PIPE, shell = True, universal_newlines = True, cwd = "jargon/core")
         #output = get_output(out_queue)
         #errors = get_output(err_queue)
 
@@ -46,6 +34,10 @@ def process_main():
         prolog.terminate()
 
         print("Output = " + outdata)
+        outdata = outdata.split("=")
+        varname, varval = outdata[0], outdata[1]
+        print("varname: " + varname)
+        print("varval: " + varval)
         print("Error = " + errdata)
 
         #print(output)
