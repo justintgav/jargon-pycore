@@ -5,9 +5,9 @@
 from ..core import swipl_driver
 import subprocess
 
-def main():
+def driver_main(args):
     done = False
-    swipl_driver.process_main()
+    swipl_driver.process_main(args)
     #parent_conn, child_conn = Pipe(True)
     #process = Process(target=swipl_driver.process_main, args=(child_conn,))
     #process.start()
@@ -18,6 +18,3 @@ def main():
     #    output = proc.communicate(s)
     #    print('Output from swipl: ')
     #    print(output)
-
-if __name__ == '__main__':
-    main()
