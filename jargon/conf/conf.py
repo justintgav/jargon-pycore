@@ -10,4 +10,4 @@ import util_dict
 
 # build data structures
 command_word_dict = util_dict.build_dict()
-print command_word_dict
+print (command_word_dict)
