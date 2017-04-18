@@ -1,1 +1,3 @@
 Configuration logic/files to go here (modules, loading custom commands/dictionaries, etc.)
+
+Use "conf.py" to initialize all configuration
