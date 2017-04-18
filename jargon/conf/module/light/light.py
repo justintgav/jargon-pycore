@@ -2,6 +2,17 @@
 # Description: A module to issue commands to a smartlight controller.
 #               The IP of the controller should be specified in LIGHT_CONTROLLER_IP
 #
+# args format:
+#   'command': must contain command phrase (Ex: 'on', 'off', 'red', 'brightness 70')
+#              Can contain multiple commands in sequence:
+#                   'on white brightness 70'
+#              is a valid command and should be passed fully to this module
+#               Passing the entire query to the module is valid.
+#
+# Example NL Queries:
+#   Turn the lights on set them to red and the brightness to 50.
+#    +args['command'] = 'on red brightness 50'
+#   >> ##Action taken (or dummy printout), no actual response##
 #
 # Note: this has been converted for demo purposes, uses the dummy_light instead of
 #           ledcontroller

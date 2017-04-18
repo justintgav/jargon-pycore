@@ -1,5 +1,19 @@
 # Author: Ryan Lindsay and Justin Gavin
 # Description: A module to handle defining words
+#
+# args format:
+#   'word': the specific word being looked up
+#   'info_requested': what information is descried
+#                       Ex: 'definition', 'origin', 'etymology', 'example'
+#
+# Example NL Queries:
+#   What is the definition of cat?
+#    +args['info_requested'] = 'definition'
+#    +args['word'] = 'cat'
+#   >> Word of Interest: cat
+#   >> Definition: a small domesticated carnivorous mammal with soft fur, a short snout,
+#   >> and retractable claws. It is widely kept as a pet or for catching mice, and many breeds have been developed.
+
 
 import requests
 import sys
@@ -48,20 +62,23 @@ def print_definition(definition, info):
     return_string += '\nWord of Interest: {}'.format(definition['word'])
 
     # Opted for if-elif-else statement instead of a dictionary for readability
-    if (info == "origin") or (info == "background"):
+    if (info == "origin") or (info == "background") or (info == "etymology"):
         return_string += '\nOrigin: {}'.format(definition['origin'])
     elif (info == "definition") or (info == "definitions") or (info == "def"):
-        for count in range(0, len(definition['senses'])):
-            description = definition['senses'][count]
-            return_string += '\nDefinition {}: {}'.format(count, description.get('definitions')[0])
-    elif (info == "examples") or (info == "example") or (info == "usage"):
+        # for count in range(0, len(definition['senses'])):
+        #    description = definition['senses'][count]
+        #    return_string += '\nDefinition {}: {}'.format(count, description.get('definitions')[0])
+        return_string += '\nDefinition: ' + definition['senses'][0].get('definitions')[0]
+    elif (info == "examples") or (info == "example") or (info == "usage") or (info == "sentence"):
         counter = 1
         for count in range(0, len(definition['senses'])):
             examples = definition['senses'][count].get('examples')
             if examples is not None:
                 for inner_count in range(0, len(examples)):
                     single = examples[inner_count].get('text')
-                    return_string += '\nExample {}: {}'.format(counter, single)
+                    # return_string += '\nExample {}: {}'.format(counter, single)
+                    # temp fix to only grab one example:
+                    return single
                     counter += 1
     else:
         return_string += '\nOrigin: {}'.format(definition['origin'])
@@ -111,4 +128,4 @@ def module_main(args):
     #     print('At least 2 parameters required to run')
 
 # Example call:
-# print(module_main({'word': 'cat', 'info_requested': 'def'}))
+print(module_main({'word': 'cat', 'info_requested': 'definition'}))

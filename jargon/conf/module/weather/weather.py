@@ -1,5 +1,19 @@
 # Author: Ryan Lindsay and Justin Gavin
 # Description: A module to handle weather information
+#
+# args format:
+#   'weather_type': expecting the 'type' of weather information requested.
+#                   Ex: 'rain', 'snow', 'temperature'
+#                   '' will result in a general report
+#   'location': the name of the city to use
+#
+# Example NL Queries:
+#   What is the temperature in Glassboro NJ?
+#    +args['weather_type'] = 'temperature'
+#    +args['location'] = 'glassboro nj'
+#   >> Current weather in Glassboro
+#   >> Current temperature		65.08°F
+#   >> Projected temperatures	High 66.2°F			Low 62.6°F
 
 import datetime
 import json
@@ -18,7 +32,7 @@ def url_creator(city_name):
     url_base = 'http://api.openweathermap.org/data/2.5/weather?q='  # Base url. Queries are appended
     return_format = 'json'  # Can be changed if needed
     unit_of_measure = 'imperial'  # For Celsius use metric
-    api_key = 'e04e1be973806b2dcc0a353dc78fc2c5'  # Justin needs diff key for solo use
+    api_key = 'e04e1be973806b2dcc0a353dc78fc2c5'  # Personal key, please don't steal
 
     # Create the full url for the api call
     full_api_url = (url_base +
@@ -162,6 +176,6 @@ def module_main(args):
         print('Something went wrong with reading data')
 
 # example calls
-# print(module_main({'weather_type': 'rain', 'location': 'glassboro nj'}))
+# print(module_main({'weather_type': 'temperature', 'location': 'glassboro nj'}))
 # print(module_main({'weather_type': 'weather', 'location': 'glassboro nj'}))
 # print(module_main({'weather_type': '', 'location': 'glassboro nj'}))
