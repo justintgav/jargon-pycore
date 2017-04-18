@@ -12,13 +12,12 @@ keys_dict = {}
 # subroutine definitions
 def __parse_dict_file(the_file):
     """Parse @param the_file"""
-    input_file = open(the_file)
-    module_name = input_file.next().strip()
-    module_list = list()
+    with open(the_file) as input_file:
+        lines = input_file.readlines()
+        module_name = lines[0].strip()
+        module_list = [line.strip() for line in lines[1:]]
 
-    for line in input_file:
-        module_list.append(line.strip())
-
+    module_list.sort()
     keys_dict[module_name] = module_list
     return
 
