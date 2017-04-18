@@ -5,9 +5,10 @@
 
 
 # import statements
-import util_dict
 
 
 # build data structures
+from jargon.conf import util_dict
+
 command_word_dict = util_dict.build_dict()
-print (command_word_dict)
+print(command_word_dict)
