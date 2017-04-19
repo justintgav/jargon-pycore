@@ -91,7 +91,7 @@ def process_main(args):
                 print('list str = ' + input_str)
             for module_query in module_keys_dict.keys():
                 prolog = subprocess.Popen(cl_args, stdin = subprocess.PIPE, stdout = subprocess.PIPE,
-                    stderr = subprocess.PIPE, shell = False) 
+                    stderr = subprocess.STDOUT, shell = False) 
                 query = construct_prolog_query(module_query, input_str)
                 if args.verbose:
                     print('query = ' + query)
@@ -100,7 +100,7 @@ def process_main(args):
                 # Step 4: pass the user's query to prolog
                 outdata, errdata = prolog.communicate(query.encode())
                 outdata = outdata.decode()
-                errdata = errdata.decode()
+                #errdata = errdata.decode()
                 # check if process still exists
                 try:
                     # os.kill(prolog.pid, 0)
@@ -115,11 +115,11 @@ def process_main(args):
                 # Step 5: process the prolog results into data structures
                 print("Output = ")
                 print(outdata)
-                if args.verbose:
-                    print("Error = " + errdata)
-                if (outdata.strip() == 'false.'):
+                #if args.verbose:
+                    #print("Error = " + errdata)
+                if 'false.' in outdata.strip(): #or 'false.' in errdata.strip()):
                     continue
-                outdata = outdata.split("\n")
+                outdata = [item for item in outdata.split("\n") if '=' in item]
                 outdict = {}
                 for line in outdata:
                     key_val = line.split('=')
