@@ -19,6 +19,7 @@ import datetime
 import json
 import urllib.request
 
+debug = False
 
 # Used to convert time to a nice format for printing
 def time_converter(time):
@@ -59,6 +60,9 @@ def data_collector(full_api_url):
 
 # Used to collect appropriate data from json object per weather query
 def data_organizer_current(full_api_c):
+    global debug
+    if debug:
+        print(str(full_api_c))
     return_data = dict(
         city=full_api_c.get('name'),  # City of interest
         cloudiness=full_api_c.get('clouds').get('all'),  # Percent cloudiness
@@ -219,6 +223,8 @@ class MinInfoLimit(Exception):
 
 
 def module_main(args):
+    global debug
+    debug = False
     try:
         main_url = url_creator(args['location'], args['time'])  # Assumes arguments are City names
         api_dict = data_collector(main_url)  # Grab base data file
@@ -237,6 +243,7 @@ def module_main(args):
     except IOError:
         print('Something went wrong with reading data')
 
+if __name__ == "__main__":
 # example calls
 # print(module_main({'location': 'Philly', 'time': '', 'weather_type': 'temperature'}))
 # print(module_main({'location': 'London', 'time': '', 'weather_type': 'rain'}))
@@ -247,3 +254,6 @@ def module_main(args):
 # print(module_main({'location': 'New York', 'time': 'five_day', 'weather_type': 'temp'}))
 # print(module_main({'location': 'Philly',   'time': 'five_day', 'weather_type': 'weather'}))
 # print(module_main({'location': 'London',   'time': 'five_day', 'weather_type': ''}))
+    print(module_main({'weather_type': 'rain', 'location': 'glassboro nj'}))
+    print(module_main({'weather_type': 'weather', 'location': 'glassboro nj'}))
+    print(module_main({'weather_type': '', 'location': 'glassboro nj'}))
