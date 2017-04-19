@@ -6,6 +6,7 @@ import json
 import urllib.request
 import sys
 
+debug = False
 
 # Used to convert time to a nice format for printing
 def time_converter(time):
@@ -40,6 +41,9 @@ def data_collector(full_api_url):
 
 # Used to define how to get certain information from the json object
 def data_organizer(full_api_dict):
+    global debug
+    if debug:
+        print(str(full_api_dict))
     return_data = dict(
         city=full_api_dict.get('name'),  # City of interest
         cloudiness=full_api_dict.get('clouds').get('all'),  # Percent cloudiness
@@ -123,6 +127,8 @@ class MinInfoLimit(Exception):
 
 
 def module_main(args):
+    global debug
+    debug = False
     try:
         # if len(sys.argv) > 62:  # Sixty API call per minute max
         #     raise WeatherAPILimit
@@ -161,7 +167,8 @@ def module_main(args):
     except IOError:
         print('Something went wrong with reading data')
 
+if __name__ == "__main__":
 # example calls
-# print(module_main({'weather_type': 'rain', 'location': 'glassboro nj'}))
-# print(module_main({'weather_type': 'weather', 'location': 'glassboro nj'}))
-# print(module_main({'weather_type': '', 'location': 'glassboro nj'}))
+    print(module_main({'weather_type': 'rain', 'location': 'glassboro nj'}))
+    print(module_main({'weather_type': 'weather', 'location': 'glassboro nj'}))
+    print(module_main({'weather_type': '', 'location': 'glassboro nj'}))

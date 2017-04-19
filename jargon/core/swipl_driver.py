@@ -36,8 +36,8 @@ def as_prolog_list(input_str):
 
 # construct a query from the given query_list
 # query_list is a string returned by as_prolog_list
-def construct_prolog_query(query_list):
-    return 's(Param1, Param2, Param3, QueryType, {}, []).\n'.format(query_list)
+def construct_prolog_query(module_query, query_list):
+    return '{0}(Param1, Param2, Param3, QueryType, {1}, []).\n'.format(module_query, query_list)
 
 def get_module_name(query_type):
     return query_type[:-len("_query")]
@@ -78,8 +78,6 @@ def process_main(args):
     cl_args = ["swipl"]
     cl_args.extend(goals)
     while not done:
-        prolog = subprocess.Popen(cl_args, stdin = subprocess.PIPE, stdout = subprocess.PIPE,
-            stderr = subprocess.PIPE, shell = False) 
 
         input_str = input("> ")
         if input_str.strip() == 'halt.':
@@ -91,47 +89,53 @@ def process_main(args):
 
             if args.verbose:
                 print('list str = ' + input_str)
-            query = construct_prolog_query(input_str)
-            if args.verbose:
-                print('query = ' + query)
-            sleep(0.25)
-
-            # Step 4: pass the user's query to prolog
-            outdata, errdata = prolog.communicate(query.encode())
-            outdata = outdata.decode()
-            errdata = errdata.decode()
-            prolog.terminate()
-
-            # Step 5: process the prolog results into data structures
-            print("Output = ")
-            print(outdata)
-            if args.verbose:
-                print("Error = " + errdata)
-            outdata = outdata.split("\n")
-            outdict = {}
-            for line in outdata:
-                key_val = line.split('=')
+            for module_query in module_keys_dict.keys():
+                prolog = subprocess.Popen(cl_args, stdin = subprocess.PIPE, stdout = subprocess.PIPE,
+                    stderr = subprocess.PIPE, shell = False) 
+                query = construct_prolog_query(module_query, input_str)
                 if args.verbose:
-                    print(str(key_val))
-                if len(line) > 1:
-                    outdict[key_val[0].strip().strip(',')] = key_val[1].strip().strip(',')
-            module_name = get_module_name(outdict['QueryType'])
-            if args.verbose:
-                print("Out dict:")
-                print(str(outdict))
-                print("Selected module: " + module_name)
-            params_dict = map_params(module_keys_dict[module_name], outdict)
-            if args.verbose:
-                print("Param dict:")
-                print(str(params_dict))
-            import_statement = "from ..conf.module.{0} import {0}".format(module_name)
-            if args.verbose:
-                print("Code to run:")
-                print(import_statement)
-            exec(import_statement)
-            main_statement = "{0}.module_main(params_dict)".format(module_name)
-            if args.verbose:
-                print("Code to run:")
-                print(main_statement)
-            output_str = eval(main_statement)
-            print(output_str)
+                    print('query = ' + query)
+                sleep(0.25)
+
+                # Step 4: pass the user's query to prolog
+                outdata, errdata = prolog.communicate(query.encode())
+                outdata = outdata.decode()
+                errdata = errdata.decode()
+                prolog.terminate()
+
+                # Step 5: process the prolog results into data structures
+                print("Output = ")
+                print(outdata)
+                if args.verbose:
+                    print("Error = " + errdata)
+                if (outdata.strip() == 'false.'):
+                    continue
+                outdata = outdata.split("\n")
+                outdict = {}
+                for line in outdata:
+                    key_val = line.split('=')
+                    if args.verbose:
+                        print(str(key_val))
+                    if len(line) > 1:
+                        outdict[key_val[0].strip().strip(',.')] = key_val[1].strip().strip(',.')
+                module_name = get_module_name(outdict['QueryType'])
+                if args.verbose:
+                    print("Out dict:")
+                    print(str(outdict))
+                    print("Selected module: " + module_name)
+                params_dict = map_params(module_keys_dict[module_name], outdict)
+                if args.verbose:
+                    print("Param dict:")
+                    print(str(params_dict))
+                import_statement = "from ..conf.module.{0} import {0}".format(module_name)
+                if args.verbose:
+                    print("Code to run:")
+                    print(import_statement)
+                exec(import_statement)
+                main_statement = "{0}.module_main(params_dict)".format(module_name)
+                if args.verbose:
+                    print("Code to run:")
+                    print(main_statement)
+                output_str = eval(main_statement)
+                print(output_str)
+                break
