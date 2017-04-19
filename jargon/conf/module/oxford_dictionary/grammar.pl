@@ -12,6 +12,7 @@
 
 oxford_dictionary(definition, Word, blank, oxford_dictionary_query) --> [define], [Word].
 oxford_dictionary(definition, Word, blank, oxford_dictionary_query) --> question_pronoun(what), be_form(is), np(the, definition), pp(of, Word).
+oxford_dictionary(definition, Word, blank, oxford_dictionary_query) --> question_pronoun(what), be_form(is), np(the, definition), pp_det(of, word), [Word].
 oxford_dictionary(Origin, Word, blank, oxford_dictionary_query) --> question_pronoun(what), be_form(is), origin_np(Origin), pp(of, Word).
 oxford_dictionary(Origin, Word, blank, oxford_dictionary_query) --> question_pronoun(what), be_form(is), origin_np(Origin), pp_det(of, word), [Word].
 
