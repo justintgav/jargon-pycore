@@ -113,8 +113,9 @@ def process_main(args):
 
 
                 # Step 5: process the prolog results into data structures
-                print("Output = ")
-                print(outdata)
+                if args.verbose:
+                    print("Output = ")
+                    print(outdata)
                 #if args.verbose:
                     #print("Error = " + errdata)
                 if 'false.' in outdata.strip(): #or 'false.' in errdata.strip()):
