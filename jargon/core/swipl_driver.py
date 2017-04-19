@@ -101,7 +101,16 @@ def process_main(args):
                 outdata, errdata = prolog.communicate(query.encode())
                 outdata = outdata.decode()
                 errdata = errdata.decode()
-                prolog.terminate()
+                # check if process still exists
+                try:
+                    # os.kill(prolog.pid, 0)
+                    prolog.terminate()
+                # except OSError:
+                except ProcessLookupError:
+                    if args.verbose:
+                        print("Prolog process does not exist")
+
+
 
                 # Step 5: process the prolog results into data structures
                 print("Output = ")
