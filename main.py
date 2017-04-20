@@ -1,4 +1,4 @@
-# Author: Johan Burke
+# Author: Johan Burke and Justin Gavin
 
 import argparse
 

@@ -29,6 +29,9 @@
 
 def module_main(args):
     command = args['command']
+    if args['verbose']:
+        print("Made it to core module")
+        print("command content:\n" + command)
     # rand_int = randint(0, 9)
     if "your name" in command:
         return "I prefer to be called jargon"

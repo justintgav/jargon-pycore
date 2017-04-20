@@ -14,7 +14,7 @@ command_word_dict = {}
 def __parse_dict_file(the_file):
     """Parse @param the_file"""
     input_file = open(the_file)
-    module_name = input_file.next().strip()
+    module_name = input_file.readline().strip()
 
     for line in input_file:
         command_word_dict[line.strip()] = module_name
@@ -23,7 +23,7 @@ def __parse_dict_file(the_file):
 
 # returns a dictionary of all command words with associated module
 def build_dict():
-    dict_file_dir = './module/'
+    dict_file_dir =  os.path.dirname(os.path.realpath(__file__)) + '/module/'
     #for filename in os.listdir(dict_file_dir):
     #    __parse_dict_file(dict_file_dir + filename)
 
