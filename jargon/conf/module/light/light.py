@@ -43,7 +43,7 @@ def module_main(args):
         if command_string != 'default_color':
             led.set_color(command_string)
 
-
+    return ' '
 
     #if "off" in command_string:
     #    led.off()
