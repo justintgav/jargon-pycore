@@ -18,53 +18,55 @@
 #           ledcontroller
 
 
-# import ledcontroller
+import ledcontroller
 from jargon.conf.module.light import dummy_light
 
 LIGHT_CONTROLLER_IP = "10.0.0.30"
 
 
 def module_main(args):
-    led = dummy_light.dummy_light()
-    # led = ledcontroller.LedController(LIGHT_CONTROLLER_IP)
-    if 'status' in args:
-        command_string = args['status']
-        if "off" in command_string:
-            led.off()
-            return
-        if "on" in command_string:
-            led.on()
-    if 'brightness' in args:
-        command_string = args['brightness']
-        if command_string != 'default_brightness':
-            led.set_brightness(command_string)
-    if 'color' in args:
-        command_string = args['color']
-        if command_string != 'default_color':
-            led.set_color(command_string)
+    # led = dummy_light.dummy_light()
+    led = ledcontroller.LedController(LIGHT_CONTROLLER_IP)
+    query = args['query']
+    if args['verbose']:
+        print(query)
+    #if 'status' in args:
+    #    command_string = args['status']
+    #    if "off" in command_string:
+    #        led.off()
+    #        return
+    #    if "on" in command_string:
+    #        led.on()
+    #if 'brightness' in args:
+    #    command_string = args['brightness']
+    #    if command_string != 'default_brightness':
+    #        led.set_brightness(command_string)
+    #if 'color' in args:
+    #    command_string = args['color']
+    #    if command_string != 'default_color':
+    #        led.set_color(command_string)
 
+    if "off" in query:
+        led.off()
+        return ' '
+    if "on" in query:
+        led.on()
+    if "white" in query:
+        led.white()
+    if "red" in query:
+        led.set_color("orange")
+        # led.set_brightness(50)
+    if "bright" in query:  # 'brighter' and 'brightness' also flags this
+        if "brightness" in query:
+            # assuming a numeric brightness level is specified, find it
+            for i in query.split():
+                if i.isdigit():
+                    led.set_brightness(int(i))
+                    return  ' '
+        # if "brightness" not found, must be bright or brighter
+        led.set_brightness(70)
+        return ' '
+    if "dim" in query:
+        led.set_brightness(30)
+        return ' '
     return ' '
-
-    #if "off" in command_string:
-    #    led.off()
-    #    return
-    #if "on" in command_string:
-    #    led.on()
-    #if "white" in command_string:
-    #    led.white()
-    #if "red" in command_string:
-    #    led.set_color("orange")
-    #    # led.set_brightness(50)
-    #if "bright" in command_string:  # 'brighter' and 'brightness' also flags this
-    #    if "brightness" in command_string:
-    #        # assuming a numeric brightness level is specified, find it
-    #        for i in command_string:
-    #            if i.isdigit():
-    #                led.set_brightness(int(i))
-    #                return
-    #    # if "brightness" not found, must be bright or brighter
-    #    led.set_brightness(70)
-    #    return
-    #if "dim" in command_string:
-    #    led.set_brightness(30)
-    #    return

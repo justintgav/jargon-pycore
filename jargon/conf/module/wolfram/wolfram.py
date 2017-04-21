@@ -19,8 +19,11 @@ import wolframalpha
 
 def module_main(args):
     client = wolframalpha.Client('5K8EHA-G654TY48VW')
-    res = client.query(args['command'])
-    return next(res.results).text
+    res = client.query(args['query'])
+    try:
+        return next(res.results).text
+    except AttributeError:
+        pass
 
 # Example use
 # print(module_main({'command': '5+5'}))

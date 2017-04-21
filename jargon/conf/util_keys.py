@@ -24,7 +24,7 @@ def __parse_dict_file(the_file):
 
 # returns a dictionary of all command words with associated program
 def build_dict():
-    dict_file_dir = './module/'
+    dict_file_dir = os.path.dirname(os.path.realpath(__file__)) + '/module/'
 
     for root, dirs, files in os.walk(dict_file_dir):
         for filename in files:

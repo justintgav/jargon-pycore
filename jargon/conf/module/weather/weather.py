@@ -185,7 +185,7 @@ def print_weather(data, data_type, time_span):
             return_string += '\nRain in the past three hours\t{}mm'.format(data['rain'])
         elif (info == "snow") or (info == "snowy") or (info == "snowfall"):
             return_string += '\nSnow in the past three hours\t{}mm'.format(data['snow'])
-        elif (info == "sky") or (info == "clouds") or (info == "clear") or (info == "weather"):
+        elif (info == "sky") or (info == "clouds") or (info == "clear"):
             return_string += '\nCurrent sky & cloud conditions\t{} - {}% Coverage'.format(
                 data['weather'], data['cloudiness'])
         elif (info == "temp") or (info == "temperature") or (info == "hot") or (info == "cool") or (info == "cold"):
@@ -226,16 +226,18 @@ def module_main(args):
     global debug
     debug = False
     try:
-        main_url = url_creator(args['location'], args['time'])  # Assumes arguments are City names
+        query = args['query']
+        location = query[query.index('in'):]
+        main_url = url_creator(location, "")  # Assumes arguments are City names
         api_dict = data_collector(main_url)  # Grab base data file
 
         # Grab data according to which time frame is being used
-        if args['time'] == 'five_day':
-            api_data = data_organizer_span(api_dict)
-        else:
-            api_data = data_organizer_current(api_dict)
+        # if args['time'] == 'five_day':
+        #     api_data = data_organizer_span(api_dict)
+        # else:
+        api_data = data_organizer_current(api_dict)
 
-        final_string = print_weather(api_data, args['weather_type'], args['time'])  # Print information requested
+        final_string = print_weather(api_data, args['command'], "")  # Print information requested
 
         return final_string
 

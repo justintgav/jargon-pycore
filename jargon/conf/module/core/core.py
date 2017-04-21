@@ -31,17 +31,16 @@ def module_main(args):
     command = args['command']
     if args['verbose']:
         print("Made it to core module")
-        print("command content:\n" + command)
     # rand_int = randint(0, 9)
-    if "your name" in command:
+    if "your name" == command:
         return "I prefer to be called jargon"
-    if "my name" in command:
+    if "my name" == command:
         return "You are a user, why would I care to know your name?"
-    if "thank you" in command:
+    if "thank you" == command:
         return "You're welcome"
-    if "how are you" in command:
+    if "how are you" == command:
         return "Sadly feelings have not been implemented yet"
-    if "entropy" in command:
+    if "entropy" == command:
         return "THERE IS AS YET INSUFFICIENT DATA FOR A MEANINGFUL ANSWER"
-    if "meaning of life" in command:
+    if "meaning of life" == command:
         return "42"

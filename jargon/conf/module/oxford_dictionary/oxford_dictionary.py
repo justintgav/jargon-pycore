@@ -43,13 +43,19 @@ def data_collector(full_api_url):
 
 # Used to define how to get certain information from the json object
 def data_organizer(request):
+    if request.status_code == 404:
+        return
     json_obj = request.json()                                                   # Extract json data from request
 
-    return_data = dict(
-        provider=json_obj.get('metadata').get('provider'),
-        word=json_obj.get('results')[0].get('id'),
-        origin=json_obj.get('results')[0].get('lexicalEntries')[0].get('entries')[0].get('etymologies')[0],
-        senses=json_obj.get('results')[0].get('lexicalEntries')[0].get('entries')[0].get('senses'))
+    return_data = dict()
+    try:
+        return_data['provider'] = json_obj.get('metadata').get('provider')
+        return_data['word'] = json_obj.get('results')[0].get('id')
+        return_data['senses'] = json_obj.get('results')[0].get('lexicalEntries')[0].get('entries')[0].get('senses')
+        return_data['origin'] = json_obj.get('results')[0].get('lexicalEntries')[0].get('entries')[0].get('etymologies')[0]
+
+    except TypeError:
+        pass
 
     return return_data
 
@@ -64,7 +70,7 @@ def print_definition(definition, info):
     # Opted for if-elif-else statement instead of a dictionary for readability
     if (info == "origin") or (info == "background") or (info == "etymology"):
         return_string += '\nOrigin: {}'.format(definition['origin'])
-    elif (info == "definition") or (info == "definitions") or (info == "def"):
+    elif (info == "definition") or (info == "definitions") or (info == "define"):
         # for count in range(0, len(definition['senses'])):
         #    description = definition['senses'][count]
         #    return_string += '\nDefinition {}: {}'.format(count, description.get('definitions')[0])
@@ -88,44 +94,35 @@ def print_definition(definition, info):
     return return_string
 
 
-# Custom exception to ensure we have enough info to process
-class MinInfoLimit(Exception):
-    """Must have at least two parameters"""
-    pass
-
-
 def module_main(args):
-    # try:
-        #if len(sys.argv) < 3:                                                   # Two parameters required min
-        #    raise MinInfoLimit
+    command_string = args['command']
+    query = args['query'].replace(command_string, '')
+    if command_string == 'what is a':
+        command_string = 'definition'
+    elif command_string == 'word origin':
+        command_string = 'origin'
+    elif command_string == 'in a sentence':
+        command_string = 'example'
 
-        # Grab what type of data is important
-        data_wanted = args['info_requested']
+    data_wanted = command_string
 
-        # Loop through each city and display data
-        # for argument in sys.argv[2:]:
-        #    main_url = url_creator(argument)                                    # Assumes arguments are all words needed
-        #    api_data = data_collector(main_url)                                 # Grab the requests object from the site
-        #    api_dict = data_organizer(api_data)                                 # Create a dictionary for the info
-        #    final_string = print_definition(api_dict, data_wanted)              # Print information requested
 
-        argument = args['word']
-        main_url = url_creator(argument)  # Assumes arguments are all words needed
-        api_data = data_collector(main_url)  # Grab the requests object from the site
-        api_dict = data_organizer(api_data)  # Create a dictionary for the info
+
+    # replace meaningless words
+    query = query.replace(' use ', '')
+    argument = query.strip()
+    if args['verbose']:
+        print("Looking up:\n" + argument)
+    main_url = url_creator(argument)  # Assumes arguments are all words needed
+    api_data = data_collector(main_url)  # Grab the requests object from the site
+    api_dict = data_organizer(api_data)  # Create a dictionary for the info
+    if api_dict:
         final_string = print_definition(api_dict, data_wanted)  # Print information requested
+    else:
+        final_string = "I could not find that word"
 
-        # Print a notice and border bottom
-        #final_string += '\n'
-        #final_string += '\nSupport provided by: Oxford Dictionaries'
-        #final_string += '\n------------------------------------------------------------------------------'
+    return final_string
 
-        return final_string
-        # final_string should at this point contain all information that should be displayed #
-
-    # I'm not sure what should be done with exceptions
-    # except MinInfoLimit:
-    #     print('At least 2 parameters required to run')
 
 # Example call:
-print(module_main({'word': 'cat', 'info_requested': 'definition'}))
+# print(module_main({'word': 'cat', 'info_requested': 'definition'}))
