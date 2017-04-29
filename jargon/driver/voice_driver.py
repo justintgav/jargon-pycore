@@ -4,14 +4,14 @@ from os import environ, path
 from pocketsphinx.pocketsphinx import *
 from sphinxbase.sphinxbase import *
 
-MODELDIR = "pocketsphinx/model"
-DATADIR = "pocketsphinx/test/data"
+MODELDIR = "/usr/local/lib/python3.4/dist-packages/pocketsphinx/model"
+DATADIR = "/usr/local/lib/python3.4/dist-packages/pocketsphinx/data"
 
 # Create a decoder with certain model
 config = Decoder.default_config()
-config.set_string('-hmm', path.join(MODELDIR, 'en-us/en-us'))
-config.set_string('-lm', path.join(MODELDIR, 'en-us/en-us.lm.bin'))
-config.set_string('-dict', path.join(MODELDIR, 'en-us/cmudict-en-us.dict'))
+config.set_string('-hmm', path.join(MODELDIR, 'en-us'))
+config.set_string('-lm', path.join(MODELDIR, 'en-us.lm.bin'))
+config.set_string('-dict', path.join(MODELDIR, 'cmudict-en-us.dict'))
 decoder = Decoder(config)
 
 # Decode streaming data.
